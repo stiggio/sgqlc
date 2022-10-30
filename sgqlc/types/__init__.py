@@ -1806,7 +1806,7 @@ class ContainerType(BaseTypeWithTypename, metaclass=ContainerTypeMeta):
     }
 
     def __init__(self, json_data, selection_list=None):
-        assert json_data is None or isinstance(json_data, dict), \
+        assert json_data is None or isinstance(json_data, (dict, Variable)), \
             '%r (%s) is not a JSON Object' % (
                 json_data, type(json_data).__name__)
         object.__setattr__(self, '__selection_list__', selection_list)
@@ -1815,7 +1815,7 @@ class ContainerType(BaseTypeWithTypename, metaclass=ContainerTypeMeta):
     def __populate_fields(self, json_data):
         cache = OrderedDict()
         object.__setattr__(self, '__fields_cache__', cache)
-        if json_data is None:
+        if json_data is None or isinstance(json_data, Variable):
             # backing store, changed by setattr()
             object.__setattr__(self, '__json_data__', {})
             return
